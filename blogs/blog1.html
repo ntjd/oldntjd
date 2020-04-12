@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<!--
+	Blog created by ntjd
+-->
+<html>
+
+<head>
+	<title>c++关闭与stdio的同步后输出失踪 - Blog by ntjd</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="../assets/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<a href="../index.html" class="logo">Blog</a>
+		</header>
+
+		<!-- Nav -->
+		<nav id="nav">
+			<ul class="links">
+				<li><a href="../index.html">Blog Home Page</a></li>
+				<li class="active"><a href="generic.html">Generic Page</a></li>
+				<li><a href="../elements.html">Elements Reference</a></li>
+			</ul>
+			<ul class="icons">
+				<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+				<li><a href="https://github.com/ntjd" class="icon brands fa-github"><span
+							class="label">GitHub</span></a></li>
+			</ul>
+		</nav>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Post -->
+			<section class="post">
+				<header class="major">
+					<span class="date">April 7, 2019</span>
+					<h1>记C++的一次小坑</h1>
+					<p>简介：c++关闭与stdio的同步后，输出的文本失踪.<br />
+						关闭与stdio的同步后，需要在每行输出结束时加上endl来刷新缓冲区</p>
+				</header>
+				<div class="image main"><img src="../images/default.jpg" alt="" /></div>
+				<p>记C++的一次小坑<br />
+					环境：DEVC++, WIN10 1909<br /><br />
+
+					这个c++代码原是为了对一堆随机数进行排序而写<br>
+					经过去除多余部分得到如下部分c++代码：<br /></p>
+
+				<pre><code>
+#include &lt;iostream&gt;
+using namespace std;
+int main(int argc, char **argv)
+{
+int lenth = 155;
+ios::sync_with_stdio(0);
+// std::cin.tie(0);
+freopen("output.txt","w",stdout);
+for(int i=0; i &lt; lenth; i++) cout &lt; &lt; i " ";
+fclose(stdout);
+}</code></pre>
+
+				<p>BUG表现：
+					当文件规模为156以下个数据时，sorted100.txt原要输出的结果离奇失踪，但其他输出（包括其他规模时和辅助输出）正常<br />
+					删去ios::sync_with_stdio(0)或删去fclose(stdout)后正常输出<br />
+					不是txt文件的原因<br /><br />
+
+					查资料有人说要把ios::sync_with_stdio(0);std::cin.tie(0);放在freopen()后面<br />
+					实际上这个代码就有问题：<br /></p>
+
+				<pre><code>
+#include &lt;iostream&gt;
+using namespace std;
+int main(int argc, char **argv)
+{
+int lenth = 100;
+ios::sync_with_stdio(0);
+std::cin.tie(0);
+for(int i=0; i&lt;lenth; i++) cout&lt;&lt;i&lt;&lt;" ";
+		
+fclose(stdout);
+}</code></pre>
+
+				<p>最后得到了解释：<br /></p>
+
+				<pre><code>
+#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+using namespace std;
+int main()
+{
+freopen(" a.out","w",stdout);
+ios::sync_with_stdio(false);
+cout&lt;&lt;1;
+//正确的写法是cout&lt;&lt;1&lt;&lt;endl;
+//在关闭与stdio的同步后，一定在每行输出结束时加上endl来刷新缓冲区
+//否则输出将无法立刻被写入输出文件
+//无论何时，每行输出都以换行符结尾都是一个好习惯（即使只有一行输出的时候也是）
+fclose(stdout);
+return 0;
+//缓冲区的内容将在缓冲区满或程序结束时才会输出，但这时已经无法写入文件了 
+}
+参考资料https://studyingfather.com/archives/521
+</code></pre>
+
+			</section>
+
+		</div>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<section>
+				<form method="post" action="#">
+					<div class="fields">
+						<div class="field">
+							<label for="name">Name</label>
+							<input type="text" name="name" id="name" />
+						</div>
+						<div class="field">
+							<label for="email">Email</label>
+							<input type="text" name="email" id="email" />
+						</div>
+						<div class="field">
+							<label for="message">Message</label>
+							<textarea name="message" id="message" rows="3">Not work now</textarea>
+						</div>
+					</div>
+					<ul class="actions">
+						<li><input type="submit" value="Send Message" /></li>
+					</ul>
+				</form>
+			</section>
+			<section class="split contact">
+				<section class="alt">
+					<h3>Address</h3>
+					<p>1234 Somewhere Road #87257<br />
+						Somecity, Someprovince 00000-0000</p>
+				</section>
+				<section>
+					<h3>Phone</h3>
+					<p><a href="#">(000) 000-0000</a></p>
+				</section>
+				<section>
+					<h3>Email</h3>
+					<p><a href="#">3202575606@qq.com</a></p>
+				</section>
+				<section>
+					<h3>Social</h3>
+					<ul class="icons alt">
+						<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a>
+						</li>
+						<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a>
+						</li>
+						<li><a href="https://github.com/ntjd" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+					</ul>
+				</section>
+			</section>
+		</footer>
+
+		<!-- Copyright -->
+		<div id="copyright">
+			<ul>
+				<li>&copy; Untitled</li>
+				<li>Powered: <a href="https://github.com/ntjd">ntjd</a></li>
+			</ul>
+		</div>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
