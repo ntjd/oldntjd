@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<!--
+	Blog created by ntjd
+-->
+<html>
+
+<head>
+	<title>腾讯手游助手与c/c++语言编译器发生的冲突 - Blog by ntjd</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="../assets/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<a href="../index.html" class="logo">Blog</a>
+		</header>
+
+		<!-- Nav -->
+		<nav id="nav">
+			<ul class="links">
+				<li><a href="../index.html">Blog Home Page</a></li>
+				<li class="active"><a href="generic.html">Generic Page</a></li>
+				<li><a href="../elements.html">Elements Reference</a></li>
+			</ul>
+			<ul class="icons">
+				<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+				<li><a href="https://github.com/ntjd" class="icon brands fa-github"><span
+							class="label">GitHub</span></a></li>
+			</ul>
+		</nav>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Post -->
+			<section class="post">
+				<header class="major">
+					<span class="date">April 1, 2020</span>
+					<h1>腾讯手游助手与<br />
+						c/c++语言编译器发生的冲突
+					</h1>
+					<p>简介：解决gcc编译器编译出的exe文件突然都在运行时提示：<br />
+						“此应用无法在你的电脑上运行，若要找到适用于你的电脑的版本，请咨询软件发布者”的方法<br /></p>
+				</header>
+				<div class="image main"><img src="../images/default.jpg" alt="" /></div>
+				<p>环境：windows 1909，不同版本GCC编译器（如4.9.2和8.1.0）</p>
+				<p>某一天，突然gcc编译器编译出的exe可执行文件都在运行时弹框：
+					“此应用无法在你的电脑上运行，若要找到适用于你的电脑的版本，请咨询软件发布者”。
+					鄙人急待使用代码，不由得大惊失色，立刻搜索、更换库、换编译器版本、换编辑器、改环境变量、重启诸如此类，仍然毫无用处。</p>
+				<p>为了追寻原因，我将代码一块块拆开，直到最后剩下个int main()加return 0，编译出的文件执行时仍然会弹框，我彻底懵了。</p>
+				<p>很显然只可能是环境发生了变化的原因，但我一没更新windows，二没改什么系统设置，编译器和库的可能也排除了，不得已在网上搜索了半天</p>
+				<p>直到看到有好几个人说，很可能与腾讯手游助手冲突了，我刚开始并不信，因为腾讯手游助手已经在我电脑里待了半年了，按理说要出问题早出了。直到别的方法试的差不多了，我才半信半疑地卸载了腾讯手游助手，再次编译，居然可以正常运行了。</p>
+				<p>猜想是腾讯手游助手自己也有编译器，且在环境变量里它编译器的排序大于自己装的编译器，那么把自己编译器的排序调到最上方似乎也该奏效</p>
+				<p>注：想起来之前也有一次发生过这种情况，但是我将string str = "123";改为string str; str = "123";后就可以运行了，我还以为是windows打补丁后不支持string类型初始化呢，现在想起来可能也是腾讯的锅。</p>
+			</section>
+
+		</div>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<section>
+				<form method="post" action="#">
+					<div class="fields">
+						<div class="field">
+							<label for="name">Name</label>
+							<input type="text" name="name" id="name" />
+						</div>
+						<div class="field">
+							<label for="email">Email</label>
+							<input type="text" name="email" id="email" />
+						</div>
+						<div class="field">
+							<label for="message">Message</label>
+							<textarea name="message" id="message" rows="3">Not work now</textarea>
+						</div>
+					</div>
+					<ul class="actions">
+						<li><input type="submit" value="Send Message" /></li>
+					</ul>
+				</form>
+			</section>
+			<section class="split contact">
+				<section class="alt">
+					<h3>Address</h3>
+					<p>1234 Somewhere Road #87257<br />
+						Somecity, Someprovince 00000-0000</p>
+				</section>
+				<section>
+					<h3>Phone</h3>
+					<p><a href="#">(000) 000-0000</a></p>
+				</section>
+				<section>
+					<h3>Email</h3>
+					<p><a href="#">3202575606@qq.com</a></p>
+				</section>
+				<section>
+					<h3>Social</h3>
+					<ul class="icons alt">
+						<li><a href="../images/alipay_red_package.jpg" class="icon brands alt fa-twitter"><span
+									class="label">Twitter</span></a></li>
+						<li><a href="../images/alipay_red_package.jpg" class="icon brands alt fa-facebook-f"><span
+									class="label">Facebook</span></a></li>
+						<li><a href="../images/alipay_red_package.jpg" class="icon brands alt fa-instagram"><span
+									class="label">Instagram</span></a></li>
+						<li><a href="https://github.com/ntjd" class="icon brands alt fa-github"><span
+									class="label">GitHub</span></a></li>
+					</ul>
+				</section>
+			</section>
+		</footer>
+
+		<!-- Copyright -->
+		<div id="copyright">
+			<ul>
+				<li>&copy; Untitled</li>
+				<li>Powered: <a href="https://github.com/ntjd">ntjd</a></li>
+			</ul>
+		</div>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
